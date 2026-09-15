@@ -20,7 +20,7 @@ if (!gl) {
 // ------------------------------------------------------------
 
 // Define que se utilizará toda el área del canvas para dibujar.
-gl.viewport(0, 0, canvas.width, canvas.height);
+gl.viewport(0,0,canvas.width,canvas.height);
 
 // Define el color de fondo (negro, totalmente opaco).
 gl.clearColor(0.0, 0.0, 0.0, 1.0);
@@ -33,9 +33,9 @@ gl.clearColor(0.0, 0.0, 0.0, 1.0);
 
 // Arreglo de coordenadas del triángulo en coordenadas NDC.
 const vertices = new Float32Array([
-     0.0,  0.35,   // Vértice superior.
-    -0.35, -0.35,  // Vértice inferior izquierdo.
-     0.35, -0.35   // Vértice inferior derecho.
+    0.0,  0.35,   // Vértice superior.
+    -0.35, -0.35, // Vértice inferior izquierdo.
+    0.35, -0.35   // Vértice inferior derecho.
 ]);
 
 // Crea un buffer en la GPU para almacenar los vértices.

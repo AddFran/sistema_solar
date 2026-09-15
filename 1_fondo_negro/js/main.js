@@ -6,6 +6,9 @@ const canvas = document.getElementById("glCanvas");
 
 // Solicita al navegador un contexto de renderizado WebGL 2 para poder dibujar gráficos 3D.
 const gl = canvas.getContext("webgl2");
+    // Un contexto es un conjunto de funciones y propiedades que nos permiten dibujar en el canvas (tmb podemos)
+    // Aqui solicitamos un contexto preparado para trabajar con WebGL 2
+    
 
 // Verifica si el navegador soporta WebGL2 y si el contexto fue creado correctamente
 if (!gl) {
@@ -20,7 +23,7 @@ gl.viewport(0, 0, canvas.width, canvas.height);
 // Establece el color con el que se limpiará el canvas.
 // Formato RGBA: rojo, verde, azul y alfa (transparencia).
 // Aquí se usa negro completamente opaco.
-gl.clearColor(0.0, 0.0, 0.0, 1.0);
+gl.clearColor(0.7, 0.0, 0.0, 1.0);
 
 // Limpia el buffer de color del canvas usando el color definido anteriormente.
 // Como el color es negro, el canvas se pinta completamente de negro.

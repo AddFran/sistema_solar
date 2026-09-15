@@ -1,34 +1,40 @@
-// ------------------------------------------------------------
-// PASO 2 - PRIMER TRIÁNGULO CON WEBGL2
-// Este programa dibuja un triángulo de color amarillo sobre el canvas.
-// ------------------------------------------------------------
+// Obtiene del documento HTML el elemento <canvas> cuyo id es "glCanvas"
+const canvas = document.getElementById("glCanvas"); 
+    // La variable "canvas" es una referencia al elemento con el id "glCanvas"
+    // Buscamos en todo el documento la variable con el id "glCanvas"
+    // "canvas" contiene el documento HTML completo
 
-// Obtiene el elemento <canvas> del documento HTML.
-const canvas = document.getElementById("glCanvas");
-
-// Obtiene el contexto WebGL2 para poder renderizar gráficos.
+// Solicita al navegador un contexto de renderizado WebGL 2 para poder dibujar gráficos 3D.
 const gl = canvas.getContext("webgl2");
+    // Un contexto es un conjunto de funciones y propiedades que nos permiten dibujar en el canvas (tmb podemos)
+    // Aqui solicitamos un contexto preparado para trabajar con WebGL 2
+    
 
-// Comprueba si el navegador soporta WebGL2.
+// Verifica si el navegador soporta WebGL2 y si el contexto fue creado correctamente
 if (!gl) {
-    // Si no existe el contexto, se detiene el programa mostrando un error.
+    // Si no hay soporte para WebGL2, detiene la ejecución mostrando un error
     throw new Error("WebGL2 no está disponible en este navegador.");
 }
 
-// ------------------------------------------------------------
-// 1. Preparar el área de renderizado
-// ------------------------------------------------------------
-
-// Define el área donde WebGL dibujará (todo el canvas).
+// Define el área del canvas donde WebGL dibujará
+// Los parámetros son: x, y, ancho y alto del viewport
 gl.viewport(0, 0, canvas.width, canvas.height);
 
-// Establece el color de fondo del canvas (negro opaco).
-gl.clearColor(0.0, 0.0, 0.0, 1.0);
+// Establece el color con el que se limpiará el canvas.
+// Formato RGBA: rojo, verde, azul y alfa (transparencia).
+// Aquí se usa negro completamente opaco.
+gl.clearColor(0.7, 0.0, 0.0, 1.0);
 
-// Limpia el buffer de color y pinta el fondo de negro.
+// Limpia el buffer de color del canvas usando el color definido anteriormente.
+// Como el color es negro, el canvas se pinta completamente de negro.
 gl.clear(gl.COLOR_BUFFER_BIT);
 
+
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 
 // ------------------------------------------------------------
 // 2. Definir los tres vértices del triángulo
@@ -36,7 +42,7 @@ gl.clear(gl.COLOR_BUFFER_BIT);
 // x e y van desde -1 hasta 1.
 // ------------------------------------------------------------
 
-// Crea un arreglo de números flotantes con las coordenadas de los vértices.
+// Creamos un arreglo de números flotantes con las coordenadas de los vértices.
 const vertices = new Float32Array([
     0.0,  0.7,   // Vértice superior (centro arriba)
     -0.7, -0.7,  // Vértice inferior izquierdo
@@ -102,7 +108,7 @@ function crearShader(gl, tipo, codigoFuente) {
     // Crea un shader del tipo indicado (vertex o fragment).
     const shader = gl.createShader(tipo);
 
-    // Envía el código fuente al shader.
+    // Envia el código fuente al shader.
     gl.shaderSource(shader, codigoFuente);
 
     // Compila el código GLSL.
