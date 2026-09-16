@@ -5,28 +5,18 @@
 
 const canvas = document.getElementById("glCanvas");
 const gl = canvas.getContext("webgl2");
-
 if (!gl) {
     throw new Error("WebGL2 no está disponible en este navegador.");
 }
-
 gl.viewport(0, 0, canvas.width, canvas.height);
-
 gl.clearColor(0.0, 0.0, 0.0, 1.0);
 
-// Activamos el test de profundidad.
-gl.enable(gl.DEPTH_TEST);
+gl.enable(gl.DEPTH_TEST); // Activamos el test de profundidad
 
-// ------------------------------------------------------------
-// 1. GEOMETRÍA DEL CUBO
-//
-// Cada vértice tiene:
-// x, y, z, r, g, b
-// ------------------------------------------------------------
 
+// Geometria del cubo
 const vertices = new Float32Array([
     // x,     y,     z,      r,   g,   b
-
     -0.35, -0.35,  0.35,    1.0, 0.2, 0.2, // 0
      0.35, -0.35,  0.35,    0.2, 1.0, 0.2, // 1
      0.35,  0.35,  0.35,    0.2, 0.4, 1.0, // 2
@@ -38,28 +28,23 @@ const vertices = new Float32Array([
     -0.35,  0.35, -0.35,    0.7, 0.7, 0.7  // 7
 ]);
 
-// Cada cara del cubo está formada por dos triángulos.
+// Cada cara del cubo esta formada por dos triangulos
 const indices = new Uint16Array([
     // Frente
     0, 1, 2,
     0, 2, 3,
-
     // Derecha
     1, 5, 6,
     1, 6, 2,
-
     // Atrás
     5, 4, 7,
     5, 7, 6,
-
     // Izquierda
     4, 0, 3,
     4, 3, 7,
-
     // Arriba
     3, 2, 6,
     3, 6, 7,
-
     // Abajo
     4, 5, 1,
     4, 1, 0
@@ -70,7 +55,6 @@ const indices = new Uint16Array([
 // ------------------------------------------------------------
 
 const vertexShaderSource = `#version 300 es
-
 in vec3 aPosition;
 in vec3 aColor;
 
@@ -80,13 +64,11 @@ out vec3 vColor;
 
 void main() {
     gl_Position = uModelMatrix * vec4(aPosition, 1.0);
-
     vColor = aColor;
 }
 `;
 
 const fragmentShaderSource = `#version 300 es
-
 precision highp float;
 
 in vec3 vColor;
@@ -103,23 +85,16 @@ void main() {
 // ------------------------------------------------------------
 
 function crearShader(gl, tipo, codigoFuente) {
-
     const shader = gl.createShader(tipo);
-
     gl.shaderSource(shader, codigoFuente);
     gl.compileShader(shader);
-
     if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-
         const error = gl.getShaderInfoLog(shader);
-
         gl.deleteShader(shader);
-
         throw new Error(
             "Error al compilar shader:\n" + error
         );
     }
-
     return shader;
 }
 
@@ -127,68 +102,37 @@ function crearShader(gl, tipo, codigoFuente) {
 // 4. COMPILAR Y ENLAZAR PROGRAMA
 // ------------------------------------------------------------
 
-const vertexShader = crearShader(
-    gl,
-    gl.VERTEX_SHADER,
-    vertexShaderSource
-);
-
-const fragmentShader = crearShader(
-    gl,
-    gl.FRAGMENT_SHADER,
-    fragmentShaderSource
-);
+const vertexShader = crearShader(gl,gl.VERTEX_SHADER,vertexShaderSource);
+const fragmentShader = crearShader(gl,gl.FRAGMENT_SHADER,fragmentShaderSource);
 
 const program = gl.createProgram();
-
 gl.attachShader(program, vertexShader);
 gl.attachShader(program, fragmentShader);
-
 gl.linkProgram(program);
 
 if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-
     throw new Error(
         "Error al enlazar programa:\n" +
         gl.getProgramInfoLog(program)
     );
 }
 
-// ------------------------------------------------------------
-// 5. CREAR VAO
-// ------------------------------------------------------------
-
 const vao = gl.createVertexArray();
-
 gl.bindVertexArray(vao);
-
-// ------------------------------------------------------------
-// 6. BUFFER DE VÉRTICES
-// ------------------------------------------------------------
 
 const vertexBuffer = gl.createBuffer();
 
-gl.bindBuffer(
-    gl.ARRAY_BUFFER,
-    vertexBuffer
-);
+gl.bindBuffer(gl.ARRAY_BUFFER,vertexBuffer);
+gl.bufferData(gl.ARRAY_BUFFER,vertices,gl.STATIC_DRAW);
 
-gl.bufferData(
-    gl.ARRAY_BUFFER,
-    vertices,
-    gl.STATIC_DRAW
-);
 
 // Cada vértice contiene 6 floats:
 // x, y, z, r, g, b
 const stride = 6 * Float32Array.BYTES_PER_ELEMENT;
 
 // Posición
-const positionLocation =
-    gl.getAttribLocation(program, "aPosition");
-
+const positionLocation = gl.getAttribLocation(program, "aPosition");
 gl.enableVertexAttribArray(positionLocation);
-
 gl.vertexAttribPointer(
     positionLocation,
     3,
@@ -199,8 +143,7 @@ gl.vertexAttribPointer(
 );
 
 // Color
-const colorLocation =
-    gl.getAttribLocation(program, "aColor");
+const colorLocation = gl.getAttribLocation(program, "aColor");
 
 gl.enableVertexAttribArray(colorLocation);
 
@@ -237,7 +180,6 @@ gl.bufferData(
 // ------------------------------------------------------------
 
 function matrizIdentidad4() {
-
     return new Float32Array([
         1, 0, 0, 0,
         0, 1, 0, 0,
@@ -247,7 +189,6 @@ function matrizIdentidad4() {
 }
 
 function matrizTraslacion4(tx, ty, tz) {
-
     return new Float32Array([
         1,  0,  0,  0,
         0,  1,  0,  0,
@@ -257,7 +198,6 @@ function matrizTraslacion4(tx, ty, tz) {
 }
 
 function matrizEscala4(sx, sy, sz) {
-
     return new Float32Array([
         sx, 0,  0,  0,
         0,  sy, 0,  0,
@@ -267,10 +207,8 @@ function matrizEscala4(sx, sy, sz) {
 }
 
 function matrizRotacionX(angulo) {
-
     const c = Math.cos(angulo);
     const s = Math.sin(angulo);
-
     return new Float32Array([
         1, 0,  0, 0,
         0, c,  s, 0,
@@ -280,7 +218,6 @@ function matrizRotacionX(angulo) {
 }
 
 function matrizRotacionY(angulo) {
-
     const c = Math.cos(angulo);
     const s = Math.sin(angulo);
 
