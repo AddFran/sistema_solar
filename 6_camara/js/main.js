@@ -11,9 +11,7 @@ if (!gl) {
 }
 
 gl.viewport(0, 0, canvas.width, canvas.height);
-
 gl.clearColor(0.0, 0.0, 0.0, 1.0);
-
 gl.enable(gl.DEPTH_TEST);
 
 // ------------------------------------------------------------
@@ -143,24 +141,13 @@ const vao = gl.createVertexArray();
 gl.bindVertexArray(vao);
 
 const vertexBuffer = gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER,vertexBuffer);
+gl.bufferData(gl.ARRAY_BUFFER,vertices,gl.STATIC_DRAW);
 
-gl.bindBuffer(
-    gl.ARRAY_BUFFER,
-    vertexBuffer
-);
-
-gl.bufferData(
-    gl.ARRAY_BUFFER,
-    vertices,
-    gl.STATIC_DRAW
-);
-
-const stride =
-    6 * Float32Array.BYTES_PER_ELEMENT;
+const stride = 6 * Float32Array.BYTES_PER_ELEMENT;
 
 // Posición
-const positionLocation =
-    gl.getAttribLocation(program, "aPosition");
+const positionLocation = gl.getAttribLocation(program, "aPosition");
 
 gl.enableVertexAttribArray(positionLocation);
 
@@ -174,11 +161,8 @@ gl.vertexAttribPointer(
 );
 
 // Color
-const colorLocation =
-    gl.getAttribLocation(program, "aColor");
-
+const colorLocation = gl.getAttribLocation(program, "aColor");
 gl.enableVertexAttribArray(colorLocation);
-
 gl.vertexAttribPointer(
     colorLocation,
     3,
@@ -289,35 +273,16 @@ function matrizRotacionY(angulo) {
 }
 
 function multiplicarMat4(a, b) {
-
-    const resultado =
-        new Float32Array(16);
-
-    for (
-        let columna = 0;
-        columna < 4;
-        columna++
-    ) {
-        for (
-            let fila = 0;
-            fila < 4;
-            fila++
-        ) {
-            let suma = 0;
-
-            for (let k = 0; k < 4; k++) {
-
-                suma +=
-                    a[k * 4 + fila] *
-                    b[columna * 4 + k];
+    const resultado=new Float32Array(16);
+    for(let columna=0;columna<4;columna++) {
+        for(let fila=0;fila<4;fila++){
+            let suma=0;
+            for (let k=0;k<4;k++) {
+                suma+=a[k*4+fila]*b[columna*4+k];
             }
-
-            resultado[
-                columna * 4 + fila
-            ] = suma;
+            resultado[columna * 4 + fila] = suma;
         }
     }
-
     return resultado;
 }
 
@@ -325,19 +290,9 @@ function multiplicarMat4(a, b) {
 // 7. MATRIZ DE PERSPECTIVA
 // ------------------------------------------------------------
 
-function matrizPerspectiva(
-    fovRadianes,
-    aspect,
-    near,
-    far
-) {
-
-    const f =
-        1.0 / Math.tan(fovRadianes / 2);
-
-    const nf =
-        1 / (near - far);
-
+function matrizPerspectiva(fovRadianes,aspect,near,far) {
+    const f=1.0 / Math.tan(fovRadianes / 2);
+    const nf=1 / (near - far);
     return new Float32Array([
         f / aspect, 0, 0, 0,
 
@@ -357,12 +312,7 @@ function matrizPerspectiva(
 // 8. MATRIZ LOOK AT
 // ------------------------------------------------------------
 
-function matrizLookAt(
-    eye,
-    target,
-    up
-) {
-
+function matrizLookAt(eye,target,up) {
     // Eje Z de la cámara:
     // desde target hacia eye.
     const zAxis =
@@ -447,9 +397,9 @@ const projectionMatrixLocation =
 // 10. CONFIGURAR CÁMARA
 // ------------------------------------------------------------
 
-const eye = [2.5, 1.8, 4.0];
-const target = [0.0, 0.0, 0.0];
-const up = [0.0, 1.0, 0.0];
+const eye = [2.5, 1.8, 4.0];        // Posision fisica de la camara
+const target = [0.0, 0.0, 0.0];     // Punto al que mira la camara
+const up = [0.0, 1.0, 0.0];         // Direccion considerada "arriba" para la camara
 
 const viewMatrix =
     matrizLookAt(
@@ -509,15 +459,11 @@ const velocidadY = 0.8;
 
 function render(tiempoActual) {
 
-    const tiempoSegundos =
-        tiempoActual * 0.001;
+    const tiempoSegundos = tiempoActual * 0.001;
 
-    const deltaTime =
-        tiempoSegundos -
-        tiempoAnterior;
+    const deltaTime = tiempoSegundos -tiempoAnterior;
 
-    tiempoAnterior =
-        tiempoSegundos;
+    tiempoAnterior = tiempoSegundos;
 
     anguloX +=
         velocidadX * deltaTime;
